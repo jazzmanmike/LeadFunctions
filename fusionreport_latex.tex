@@ -1,0 +1,235 @@
+\documentclass[12pt,fullpage]{article} 
+\usepackage{graphicx,latexsym,subcaption,longtable,fullpage,setspace} 
+\usepackage{booktabs} % For prettier tables
+\usepackage{csvsimple}
+
+\title{DBS Fusion Report} 
+\author{ME} 
+\begin{document} 
+\pagenumbering{arabic}
+\maketitle %this command makes a title page using the \title and \author information in the preamble. 
+
+% Add Header & Address [ ]
+
+%report starts here - just fill in the blanks
+
+\section{Clinical Details}
+
+\textbf{Demographics}\\
+
+\textbf{Patient:}\\
+
+\textbf{MRN:}\\
+
+\textbf{Pre-amble:}\\
+
+\noindent \textbf{Surgery}\\
+
+\textbf{Date:}\\
+	
+\textbf{Target:}\\
+
+\textbf{System:}\\
+
+\noindent \textbf{Planning}\\
+
+% Scans used
+
+MRI (date, sequences, strength): \\
+
+CT (date, if applicable): \\
+
+\textbf{AC-PC} 
+
+AC-PC distance:
+
+Right X Y Z
+
+Left X Y Z \\
+
+\textbf{CRW}
+
+Right X Y Z Ring Arc
+
+Left X Y Z Ring Arc
+
+\pagebreak
+
+\noindent \textbf{Accuracy}\\
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Contact Distances}
+    \label{tab:table1}
+    \begin{tabular}{r|r|r|r|r|r|r}
+     
+      \toprule 
+     
+      \textbf{} & \textbf{Right} &  & & \textbf{Left} \\
+     
+     %inserted matlab data here
+     
+$Contact$ & $RGPi$ & $RGPiM$ & $Contact$ &$LGPi$ & $LGPiM$ \\ 
+
+\midrule \\
+
+K0 & 0.61 & 4.34 & K8 & 0.08 & 1.86 \\ 
+
+K1 & 1.05 & 4.29 & K9 & 0.13 & 3.06 \\ 
+
+K2 & 2.16 & 5.25 & K10 & 0.18 & 4.78 \\ 
+
+K3 & 3.68 & 6.61 & K11 & 1.98 & 6.71 \\ 
+
+      \bottomrule 
+      
+    \end{tabular}
+  \end{center}
+\end{table}
+
+% New page for each hemisphere - starts here
+
+\pagebreak
+
+\section{Right Hemisphere Implantation} 
+
+\textbf{Intra-operative Data}\\
+	
+\noindent Macrostimulation (50Hz, 0.1ms): \\
+Test 'DBS' stimulation (180Hz, 0.1ms): \\
+MER: \\
+Plan adjustment: \\
+
+
+%start the figure for the right hemisphere
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K0 (R)_axial.png}
+    \caption{Right K0}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K1 (R)_axial.png}
+    \caption{Right K1}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K2 (R)_axial.png}
+    \caption{Right K2}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K3 (R)_axial.png}
+    \caption{Right K3}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K0 (R)_sagittal.png}
+    \caption{Right K0}
+  \end{subfigure}
+      \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K1 (R)_sagittal.png}
+    \caption{Right K1}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K2 (R)_sagittal.png}
+    \caption{Right K2}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K3 (R)_sagittal.png}
+    \caption{Right K3}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K0 (R)_coronal.png}
+    \caption{Right K0}
+  \end{subfigure}
+      \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K1 (R)_coronal.png}
+    \caption{Right K1}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K2 (R)_coronal.png}
+    \caption{Right K2}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K3 (R)_coronal.png}
+    \caption{Right K3}
+  \end{subfigure}
+  \caption{Right Hemisphere}
+  \label{fig:right}
+\end{figure}
+
+
+% New page for each hemisphere - starts here
+
+\pagebreak
+
+\section{Left Hemisphere Implantation} 
+
+\textbf{Intra-operative Data}\\
+	
+\noindent Macrostimulation (50Hz, 0.1ms): \\
+Test 'DBS' stimulation (180Hz, 0.1ms): \\
+MER: \\
+Plan adjustment: \\
+
+
+%start the figure for the left hemisphere
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K8 (L)_axial.png}
+    \caption{Left K8}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K9 (L)_axial.png}
+    \caption{Left K9}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K10 (L)_axial.png}
+    \caption{Left K10}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{R_K11 (L)_axial.png}
+    \caption{Left K11}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K8 (L)_sagittal.png}
+    \caption{Left K8}
+  \end{subfigure}
+      \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K9 (L)_sagittal.png}
+    \caption{Left K9}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K10 (L)_sagittal.png}
+    \caption{Left K10}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{R_K11 (L)_sagittal.png}
+    \caption{Left K11}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K8 (L)_coronal.png}
+    \caption{Left K8}
+  \end{subfigure}
+      \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K9 (L)_coronal.png}
+    \caption{Left K9}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{K10 (L)_coronal.png}
+    \caption{Left K10}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{R_K11 (L)_coronal.png}
+    \caption{Left K11}
+  \end{subfigure}
+  \caption{Left Hemisphere}
+  \label{fig:left}
+\end{figure}
+
+
+% Sign out
+
+
+\end{document}
