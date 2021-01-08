@@ -15,10 +15,10 @@
 %note Lead-DBS = right (K0:K7) then left (K8:K15)
 
 %STN
-%atlas_target = [1, 2]; target = {'Right STN'; 'Right motor STN'; 'Left STN'; 'Left motor STN'};
+atlas_target = [1, 2]; target = {'Right STN'; 'Right motor STN'; 'Left STN'; 'Left motor STN'};
 
 %GPI
-atlas_target= [5, 6]; target = {'Right GPi'; 'Right sensorimotor GPi'; 'Left GPi'; 'Left sensorimotor GPi'};
+%atlas_target= [5, 6]; target = {'Right GPi'; 'Right sensorimotor GPi'; 'Left GPi'; 'Left sensorimotor GPi'};
 
 %VIM
 %atlas_target=[16, 18]; target = {'Right Thalamus'; 'Right VIM'; 'Left Thalamus'; 'Left VIM'};
@@ -92,7 +92,7 @@ close(gcf);
 fid = fopen('logbook_report.txt', 'w');
 
 fprintf(fid, 'Contact to target distances \n\n');
-fprintf(fid, '%s %s %s %s \n\n', target_short{1}, target_short{2}, target_short{3}, target_short{4});
+fprintf(fid, '%s %s %s %s \n\n', target{1}, target{2}, target{3}, target{4});
 fprintf(fid, 'K0 %.2f %.2f K8 %.2f %.2f \n\n', distances(1,1), distances(1,2), distances(1,3), distances(1,4));
 fprintf(fid, 'K1 %.2f %.2f K9 %.2f %.2f \n\n', distances(2,1), distances(2,2), distances(2,3), distances(2,4));
 fprintf(fid, 'K2 %.2f %.2f K10 %.2f %.2f \n\n', distances(3,1), distances(3,2), distances(3,3), distances(3,4));
@@ -124,12 +124,9 @@ contacts_motor_right = nnz(distances(:,3)<indistance);
 contacts_motor_left = nnz(distances(:,4)<indistance);
 fprintf(fid, 'Right: %.2f Left: %.2f \n\n', contacts_motor_right, contacts_motor_left);
 
-%VATs [if applicable]
-
-
-%summary
-fprintf(fid, 'right nucleus : right motor : left nucleus : left motor : right nucleus VAT : right motor VAT : left nucleus VAT : left motor VAT \n\n');
-fprintf(fid, '%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f \n\n', distances(min_nucleus(1)), distances(min_nucleus(2)), distances(min_motor(1)), distances(min_motor(2)) );
+%summary (for .csv database)
+fprintf(fid, 'right nucleus : right motor : left nucleus : left motor : \n\n');
+fprintf(fid, '%.2f %.2f %.2f %.2f \n\n', distances(min_nucleus(1)), distances(min_motor(1)), distances(min_nucleus(2)), distances(min_motor(2)) );
 
 %% Finish Up & Save
 

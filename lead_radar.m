@@ -1,62 +1,98 @@
-function lead_radar( electrode_coords )
-%LEAD_RADAR Analysis for systematic variance in electrode accuracy 
+%% lead_radar
 %
-%   lead_radar(electrode_coords);
+% Script for analysing electrode targetting errors
 %
-%   Inputs: electrode_coords,   electrode co-ordinates matrix [e.g. from Lead_DBS ea_stats.electrodes.coords_mm]
+% Just set group directory & target below
 %
-%   Outputs: saves .eps figure of electrode accuracy
-%
+% NB: set for distal medium atlas
+% NNB: saves & returns to group directory
 %
 % Michael Hart, University of British Columbia, December 2020
+
+%% Set paths
+
+%set path to group data
+group_dir = '/Volumes/LaCie/DBS_Cambridge/';
+
+%set target of interest (uncomment)
+target = 'stn';
+%target = 'gpi';
+%target = 'vim';
+
 %% Define target
-%uncomment as required
-%DISAL_Medium
-%co-ordinates from fslstats -c
+%DISAL_Medium 
+%Co-ordinates from fslstats -c
 
-%STN
-coords_left = [-11.451222 -13.150800 -7.642420]; coords_right = [11.318733 -12.492448 -7.615416]; coords_motor_left = [-12.769799 -14.992926 -7.041483]; coords_motor_right = [13.083996 -14.583479 -7.044755];
+cd(group_dir); 
 
-%GPI
-%coords_left = [-17.886158 -5.146724 -3.932297]; coords_right = [17.685215 -4.332600 -3.932334]; coords_motor_left = [-20.159295 -7.206499 -3.566539]; coords_motor_right = [19.588933 -6.642944 -3.342620];
+%set code for extracting accuracy
+if target == 'stn'
+    dir_name = 'stn*';
+    coords_left = [-11.451222 -13.150800 -7.642420]; coords_right = [11.318733 -12.492448 -7.615416]; 
+    coords_motor_left = [-12.769799 -14.992926 -7.041483]; coords_motor_right = [13.083996 -14.583479 -7.044755];
+elseif target == 'gpi'
+    dir_name = 'gpi*';
+    coords_left = [-17.886158 -5.146724 -3.932297]; coords_right = [17.685215 -4.332600 -3.932334]; 
+    coords_motor_left = [-20.159295 -7.206499 -3.566539]; coords_motor_right = [19.588933 -6.642944 -3.342620];
+elseif target == 'vim'
+    dir_name = 'vim*';
+    coords_left = [-11.693818 -17.096018 6.659262]; coords_right = [11.965826 -18.760551 6.618713]; 
+    coords_motor_left = [-13.919168 -14.512344 2.253728]; coords_motor_right = [13.950011 -15.638635 2.440878];
+end
 
-%VIM
-%coords_left = [-11.693818 -17.096018 6.659262]; coords_right = [11.965826 -18.760551 6.618713]; coords_motor_left = [-13.919168 -14.512344 2.253728]; coords_motor_right = [13.950011 -15.638635 2.440878];
+%generate individual subject ID
+net_dirs = dir(dir_name);
+
+%% Extract data
+
+nSubs = length(net_dirs);
+XYZ_right = zeros(nSubs, 3);
+XYZ_left = zeros(nSubs, 3);
+targets = {'right_nucleus_distance'; 'right_motor_distance'; 'left_nucleus_distance'; 'left_motor_distance'};
+
+for iSub = 1:nSubs
+    mysubject = net_dirs(iSub).name;
+    mysubjectpath = sprintf('%s%s', group_dir, mysubject);
+    cd(mysubjectpath);
+    load ea_stats.mat
+    %extract data: order of indices is right then left, distal to proximal
+    %highlight if data doesn't exist and input nans
+    
+    if isfield(ea_stats, 'conmat')
+        XYZ_right(iSub, :) = ea_stats.electrodes.coords_mm{1}(1, :);
+        XYZ_left(iSub, :) = ea_stats.electrodes.coords_mm{2}(1, :);
+    else
+        XYZ_right(iSub, :) = nan;
+        XYZ_left(iSub, :) = nan;
+        sprintf('%s : no electrode distances', mysubject)
+    end
+    
+    clear ea_stats
+    
+end
 
 %% Compute error
 
-load(ea_stats.electrodes.coords_mm);
-XYZ_right = ea_stats.electrodes.coords_mm{1};
-XYZ_left = ea_stats.electrodes.coords_mm{2};
+delta_right = XYZ_right - coords_right;
+delta_left = XYZ_left - coords_left;
 
-delta_right = zeros();
-delta_left = zeros();
-delta_right = [delta_right; (XYZ_right - coords_right)];
-delta_left = [delta_left; (XYZ_left - coords_left)];
+%% Generate surface
 
+flat_right = zeros(200,200);
 
-%Overall nucleus
-%Right
-Xr = electrode_coords(1,1) - coords_right(1,1);
-Yr = electrode_coords(1,2) - coords_right(1,2);
-Zr = electrode_coords(1,3) - coords_right(1,3);
+%multiply x10 & round
+nRows = size(delta_right, 1);
+for iRow = 1:nRows
+    flat_right(100-round(delta_right(iRow, 1)*10, 0), 100-round(delta_right(iRow, 2)*10, 0)) = 100-round(delta_right(iRow, 3)*10, 0);
+end
 
-%Left
-Xl = electrode_coords(2,1) - coords_left(1,1);
-Yl = electrode_coords(2,2) - coords_left(1,2);
-Zl = electrode_coords(2,3) - coords_left(1,3);
+flat_left = zeros(200,200);
 
-%Motor nucleus
-%Right
-Xrm = electrode_coords(1,1) - coords_motor_right(1,1);
-Yrm = electrode_coords(1,2) - coords_motor_right(1,2);
-Zrm = electrode_coords(1,3) - coords_motor_right(1,3);
-
-%Left
-Xlm = electrode_coords(2,1) - coords__motor_left(1,1);
-Ylm = electrode_coords(2,2) - coords__motor_left(1,2);
-Zlm = electrode_coords(2,3) - coords__motor_left(1,3);
-
+%multiply x10 & round
+nRows = size(delta_left, 1);
+for iRow = 1:nRows
+    flat_left(100-round(delta_left(iRow, 1)*10, 0), 100-round(delta_left(iRow, 2)*10, 0)) = 100-round(delta_left(iRow, 3)*10, 0);
+end
 
 
 %% Matlab Surface
@@ -64,46 +100,23 @@ Zlm = electrode_coords(2,3) - coords__motor_left(1,3);
 f = figure;
 ax = axes;
 
-s = surface(grot1);
+subplot(1,2,1)
+s = surface(flat_left);
 s.EdgeColor = 'none';
-view(3)
+h = surf(flat_left);
+set(gca,'XTick',[], 'YTick', [])
+hTitle = title('left brain');
 
+subplot(1,2,2);
+s = surface(flat_right);
+s.EdgeColor = 'none';
+h = surf(flat_right);
+set(gca,'XTick',[], 'YTick', [])
+hTitle = title('right brain');
 
-x = -2:0.25:2;
-y = x;
-[X,Y] = meshgrid(x);
-F = X.*exp(-X.^2-Y.^2);
-surf(X,Y,F)
+%% Save up & close
 
-matrix = zeros(90,90);
-for i = 1:length(coords)
-    x = coords(i,1); 
-    y = coords(i,2); 
-    matrix(x,y) = coords(i,3); 
-end
+set(gcf, 'PaperPositionMode', 'auto');
+print -depsc2 plot_radar.eps
+close(gcf);
 
-%% Polar 3D
-
-[t,r] = meshgrid(linspace(0,2*pi,361),linspace(-4,4,101)); 
-[x,y] = pol2cart(t,r); 
-P = peaks(x,y); % peaks function on a polar grid
-
-% draw 3d polar plot 
-figure('Color','white','NumberTitle','off','Name','PolarPlot3d v4.3'); 
-
-polarplot3d(P,'PlotType','surfn','PolarGrid',{4 24},'TickSpacing',8,... 
-
-'AngularRange',[30 270]*pi/180,'RadialRange',[.8 4],... 
-'RadLabels',3,'RadLabelLocation',{180 'max'},'RadLabelColor','red');
-
-% set plot attributes 
-set(gca,'DataAspectRatio',[1 1 10],'View',[-12,38],... 
-'Xlim',[-4.5 4.5],'Xtick',[-4 -2 0 2 4],... 
-'Ylim',[-4.5 4.5],'Ytick',[-4 -2 0 2 4]); 
-title('polarplot3d example');
-
-
-%% Finish Up & Save
-
-filename = 'lead_logbook.mat'; 
-save(filename);
