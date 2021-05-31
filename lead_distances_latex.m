@@ -15,10 +15,10 @@
 %uncomment as required
 
 %STN
-%atlas_target = [1, 2]; target = {'right_STN_distance'; 'right_STNmotor_distance'; 'left_STN_distance'; 'left_STNmotor_distance'}; target_short = {'RSTN'; 'RSTNm'; 'LSTN'; 'LSTNm'};
+atlas_target = [1, 2]; target = {'right_STN_distance'; 'right_STNmotor_distance'; 'left_STN_distance'; 'left_STNmotor_distance'}; target_short = {'RSTN'; 'RSTNm'; 'LSTN'; 'LSTNm'};
 
 %GPI
-atlas_target= [5, 6]; target = {'right_GPI_distance'; 'right_GPIsensory_distance'; 'left_GPI_distance'; 'left_GPIsensory_distance'}; target_short = {'RGPi'; 'RGPiM'; 'LGPi'; 'LGPiM'};
+%atlas_target= [5, 6]; target = {'right_GPI_distance'; 'right_GPIsensory_distance'; 'left_GPI_distance'; 'left_GPIsensory_distance'}; target_short = {'RGPi'; 'RGPiM'; 'LGPi'; 'LGPiM'};
 
 %VIM
 %atlas_target=[16, 18]; target = {'right_thalamus_distance'; 'right_VIM_distance'; 'left_thalamus_distance'; 'left_VIM_distance'}; target_short = {'RThalamus'; 'RVIM'; 'LThalamus'; 'LVIM'};

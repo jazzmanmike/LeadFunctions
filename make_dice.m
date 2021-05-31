@@ -1,11 +1,11 @@
 function dice = make_dice( VAT1, VAT2 )
 %MAKE_DICE Compares Dice
 %
-%   dice = 2*overlap / (areaVAT1 + areaVAT2)
+%   dice = make_dice(VAT1, VAT2);
 %
-%   make_dice(VAT1, VAT2);
+%   dice co-efficient = 2*(overlap(VAT1,VAT2)) / (area(VAT1,VAT2))
 %
-%   Inputs: VAT1/2,     paths to volumes to be compared (e.g. of VATs)
+%   Inputs: VAT1/VAT2,  paths to volumes to be compared (e.g. of VATs)
 %
 %   Outputs: dice,      dice co-efficient for volumes given
 %

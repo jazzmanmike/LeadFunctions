@@ -1,6 +1,6 @@
 %% lead_radar
 %
-% Script for analysing electrode targetting errors
+% Script for analysing electrode targetting 
 %
 % Just set group directory & target below
 %
@@ -58,6 +58,7 @@ for iSub = 1:nSubs
     %extract data: order of indices is right then left, distal to proximal
     %highlight if data doesn't exist and input nans
     
+    %contact 1 & 8 (Medtronic): most distal / target
     if isfield(ea_stats, 'conmat')
         XYZ_right(iSub, :) = ea_stats.electrodes.coords_mm{1}(1, :);
         XYZ_left(iSub, :) = ea_stats.electrodes.coords_mm{2}(1, :);
@@ -71,52 +72,109 @@ for iSub = 1:nSubs
     
 end
 
+cd(group_dir);
+
 %% Compute error
 
 delta_right = XYZ_right - coords_right;
 delta_left = XYZ_left - coords_left;
 
-%% Generate surface
 
-flat_right = zeros(200,200);
+%% Generate surfaces (including z-depths)
 
-%multiply x10 & round
-nRows = size(delta_right, 1);
-for iRow = 1:nRows
-    flat_right(100-round(delta_right(iRow, 1)*10, 0), 100-round(delta_right(iRow, 2)*10, 0)) = 100-round(delta_right(iRow, 3)*10, 0);
-end
+%left
+x = round(delta_left(:,1)); 
+y = round(delta_left(:,2)); 
+z = round(delta_left(:,3));
 
-flat_left = zeros(200,200);
+%griddata / surf
+d = -6:0.05:6;
+[xq,yq] = meshgrid(d,d); 
+vq = griddata(x,y,z,xq,yq, 'cubic');
+vq(isnan(vq)) = 0;
+surf(xq,yq,vq)
+
+set(gcf, 'PaperPositionMode', 'auto');
+print -depsc2 electrodes_radar_left.eps
+close(gcf);
+
+%right
+x = round(delta_right(:,1)); 
+y = round(delta_right(:,2)); 
+z = round(delta_right(:,3));
+
+%griddata / surf
+d = -6:0.05:6;
+[xq,yq] = meshgrid(d,d); 
+vq = griddata(x,y,z,xq,yq, 'cubic');
+vq(isnan(vq)) = 0;
+surf(xq,yq,vq)
+
+set(gcf, 'PaperPositionMode', 'auto');
+print -depsc2 electrodes_radar_right.eps
+close(gcf);
+
+%% Generate frequency targets (not z-depths)
+
+flat_left = zeros(20,20);
 
 %multiply x10 & round
 nRows = size(delta_left, 1);
 for iRow = 1:nRows
-    flat_left(100-round(delta_left(iRow, 1)*10, 0), 100-round(delta_left(iRow, 2)*10, 0)) = 100-round(delta_left(iRow, 3)*10, 0);
+    flat_left(10-round(delta_left(iRow, 1), 0), 10-round(delta_left(iRow, 2), 0)) = flat_left(10-round(delta_left(iRow, 1), 0), 10-round(delta_left(iRow, 2), 0)) + 1;
 end
 
+flat_right = zeros(20,20);
 
-%% Matlab Surface
+%multiply x10 & round
+nRows = size(delta_right, 1);
+for iRow = 1:nRows
+    flat_right(10-round(delta_right(iRow, 1), 0), 10-round(delta_right(iRow, 2), 0)) = flat_right(10-round(delta_right(iRow, 1), 0), 10-round(delta_right(iRow, 2), 0)) + 1;
+end
 
-f = figure;
-ax = axes;
+%% Matrix plot
 
-subplot(1,2,1)
-s = surface(flat_left);
-s.EdgeColor = 'none';
-h = surf(flat_left);
-set(gca,'XTick',[], 'YTick', [])
-hTitle = title('left brain');
+%set figure & colourmap
 
-subplot(1,2,2);
-s = surface(flat_right);
-s.EdgeColor = 'none';
-h = surf(flat_right);
-set(gca,'XTick',[], 'YTick', [])
-hTitle = title('right brain');
+figure1 = figure('Name', 'ElectrodeTargeting');
+colormap( flipud(gray(256)) )
 
-%% Save up & close
+%right
+vq = interp2(flat_right, 2);
+subplot1 = subplot(2,2,2,'Parent',figure1);
+hold(subplot1,'on');
+imagesc(vq);
+title({'Right'});
+xticklabels({'-20', '-10', '0', '10', '20'});
+yticklabels({'-20', '-10', '0', '10', '20'});
+
+subplot2 = subplot(2,2,4,'Parent',figure1);
+hold(subplot2,'on');
+contour(vq);
+xticklabels({''});
+yticklabels({''});
+
+%left
+vq = interp2(flat_left, 2);
+subplot1 = subplot(2,2,1,'Parent',figure1);
+hold(subplot1,'on');
+imagesc(vq);
+title({'Left'});
+xticklabels({'-20', '-10', '0', '10', '20'});
+yticklabels({'-20', '-10', '0', '10', '20'});
+xlabel('distance (mm)');
+ylabel('distance (mm)');
+
+subplot2 = subplot(2,2,3,'Parent',figure1);
+hold(subplot2,'on');
+contour(vq);
+xticklabels({''});
+yticklabels({''});
 
 set(gcf, 'PaperPositionMode', 'auto');
-print -depsc2 plot_radar.eps
+saveas(gcf, 'electrodes_radar_matrix', 'epsc2');
 close(gcf);
+
+
+
 

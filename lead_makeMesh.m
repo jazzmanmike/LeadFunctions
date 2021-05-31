@@ -1,4 +1,5 @@
-%% Just some code for viewing ea_atlas parts as a mesh
+lead
+kfewfew%% Just some code for viewing ea_atlas parts as a mesh
 load([ea_space([],'atlases'),'DISTAL Minimal (Ewert 2017)',filesep,'atlas_index.mat']); % manually load definition of DISTAL atlas.
 ea_mnifigure(); % open up Elvis viewer
 rSTN=atlases.fv{1,1}; % extract the right STN.
